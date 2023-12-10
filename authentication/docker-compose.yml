@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres
+    container_name: authentication_database
+    restart: always
+    ports:
+      - "${DATABASE_HOST}:${DATABASE_HOST}"
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    volumes:
+      - pgdata:/data/postgres
+
+  app:
+    build: .
+    container_name: authentication
+    restart: always
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+      - "${DEBUG_PORT}:${DEBUG_PORT}"
+    volumes:
+      - .:/usr/app
+    links: 
+      - database
+    depends_on:
+      - database
