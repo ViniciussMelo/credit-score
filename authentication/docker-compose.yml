@@ -1,16 +1,16 @@
-version: '3.9'
+version: '3.3'
 
 services:
   database:
     image: postgres
     container_name: authentication_database
     restart: always
-    ports:
-      - "${DATABASE_HOST}:${DATABASE_HOST}"
     environment:
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-      - POSTGRES_DB=${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - "${DATABASE_PORT}:${DATABASE_PORT}"
     volumes:
       - pgdata:/data/postgres
 
@@ -18,6 +18,10 @@ services:
     build: .
     container_name: authentication
     restart: always
+    environment:
+      DATABASE_HOST: database
+      APP_PORT: ${APP_PORT}
+      DEBUG_PORT: ${DEBUG_PORT}
     ports:
       - "${APP_PORT}:${APP_PORT}"
       - "${DEBUG_PORT}:${DEBUG_PORT}"
@@ -27,3 +31,7 @@ services:
       - database
     depends_on:
       - database
+
+volumes:
+  pgdata:
+    driver: local

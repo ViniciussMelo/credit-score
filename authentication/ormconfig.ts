@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   type: process.env.DATABASE_DIALECT,
   host: process.env.DATABASE_HOST,
@@ -8,8 +10,8 @@ module.exports = {
   synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
   logging: Boolean(process.env.DATABASE_LOGGING),
   entities: ['./src/modules/**/entities/*.entity{.ts,.js}'],
-  migrations: ['./src/migrations/*{.ts,.js}'],
+  migrations: ['./src/shared/typeorm/migrations/*{.ts,.js}'],
   cli: {
-    migrationsDir: __dirname + '/src/migrations',
+    migrationsDir: __dirname + '/src/shared/typeorm/migrations',
   },
 };
