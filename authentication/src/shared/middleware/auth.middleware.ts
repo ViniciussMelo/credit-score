@@ -22,7 +22,7 @@ export async function ensureAuthenticated(
     const { sub: user_id } = verify(token, JWT_SECRET_TOKEN) as IPayload;
 
     request.user = {
-      id: user_id,
+      id: +user_id,
     };
 
     next();

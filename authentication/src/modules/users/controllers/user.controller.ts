@@ -11,7 +11,7 @@ export class UserController {
   async register(request: Request, response: Response): Promise<Response> {
     await this.userService.create(request.body);
 
-    return response.status(200).send();
+    return response.status(201).send();
   }
 
   async login(request: Request, response: Response): Promise<Response> {
@@ -21,7 +21,7 @@ export class UserController {
   }
 
   async delete(request: Request, response: Response): Promise<Response> {
-    await this.userService.delete(parseInt((request.user.id)));
+    await this.userService.delete((request.user.id));
 
     return response.status(200).send();
   }

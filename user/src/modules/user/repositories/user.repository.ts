@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 
 import { AppDataSource } from '../../database/typeorm/data-source';
+import { UserEntity } from '../entities/user.entity';
 import { CreateUserDto } from '../dtos/create-user.dto';
-import { UserEntity, UserRole } from '../entities/user.entity';
 
 export class UserRepository {
   private readonly repository: Repository<UserEntity>;
@@ -14,28 +14,14 @@ export class UserRepository {
   async create(data: CreateUserDto): Promise<UserEntity> {
     const user = this.repository.create(data);
 
-    const response = await this.repository.save(user);
-
-    return response;
+    return this.repository.save(user);
   }
 
-  async findByEmail(email: string): Promise<UserEntity | null> {
+  async getByEmail(email: string): Promise<UserEntity | null> {
     return this.repository.findOne({
       where: {
         email
       }
     });
-  }
-
-  async findById(id: number): Promise<UserEntity | null> {
-    return this.repository.findOne({
-      where: {
-        id
-      }
-    });
-  }
-
-  async deleteById(id: number): Promise<void> {
-    await this.repository.softDelete(id);
   }
 }

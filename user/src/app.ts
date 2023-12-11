@@ -5,11 +5,13 @@ import cors from 'cors';
 
 import { AppDataSource } from './modules/database/typeorm/data-source';
 import { AppError } from './shared/errors/app.error';
+import { router } from './shared/routes';
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(router);
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
