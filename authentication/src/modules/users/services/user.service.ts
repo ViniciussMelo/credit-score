@@ -3,6 +3,7 @@ import { ILoginResponse } from '../interfaces/login-response.interface';
 import { BcryptHash } from '../../../shared/utils/bcrypt-hash.utils';
 import { UserRepository } from '../repositories/user.repository';
 import { AppError } from '../../../shared/errors/app.error';
+import { UserUtil } from '../../../shared/utils/user.util';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { LoginDto } from '../dtos/login.dto';
 
@@ -49,7 +50,7 @@ export class UserService {
       throw new AppError('Unauthorized', 401);
     }
 
-    return this.authenticationService.signIn(foundUser);
+    return this.authenticationService.signIn({ ...foundUser, isAdmin: UserUtil.isAdmin(foundUser.role) });
   }
 
   async delete(userId: number): Promise<void> {

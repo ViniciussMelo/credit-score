@@ -57,8 +57,6 @@ export class AssetService {
       throw new AppError('Not found', 404);
     }
 
-    console.log('data: ', data)
-
     return this.assetRepository.update(id, data);
   }
 
@@ -69,6 +67,6 @@ export class AssetService {
       throw new AppError('Not found', 404);
     }
 
-    await this.assetRepository.deleteByIdAndUSerId(id, userId);
+    await this.assetRepository.deleteById(id);
   }
 }

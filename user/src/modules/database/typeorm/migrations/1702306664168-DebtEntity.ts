@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from "typeorm"
 
-export class DebitEntity1702306664168 implements MigrationInterface {
+export class DebtEntity1702306664168 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: 'debits',
+                name: 'debts',
                 columns: [
                     {
                         name: 'id',
@@ -49,17 +49,17 @@ export class DebitEntity1702306664168 implements MigrationInterface {
 
 
         await queryRunner.createIndex(
-            'debits',
+            'debts',
             new TableIndex({
-                name: 'debits_user_id_idx',
+                name: 'debts_user_id_idx',
                 columnNames: ['user_id']
             })
         );
 
         await queryRunner.createForeignKey(
-            'debits',
+            'debts',
             new TableForeignKey({
-                name: 'debits_user_id_fk',
+                name: 'debts_user_id_fk',
                 columnNames: ['user_id'],
                 referencedTableName: 'users',
                 referencedColumnNames: ['id'],
@@ -69,9 +69,9 @@ export class DebitEntity1702306664168 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropIndex('debits', 'debits_user_id_idx');
-        await queryRunner.dropForeignKey('debits', 'debits_user_id_fk');
-        await queryRunner.dropTable('debits');
+        await queryRunner.dropIndex('debts', 'debts_user_id_idx');
+        await queryRunner.dropForeignKey('debts', 'debts_user_id_fk');
+        await queryRunner.dropTable('debts');
     }
 
 }

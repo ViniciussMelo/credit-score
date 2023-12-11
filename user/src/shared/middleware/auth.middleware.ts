@@ -19,12 +19,13 @@ export async function ensureAuthenticated(
   const [, token] = authHeader.split(" ");
 
   try {
-    const { sub: user_id, email, name } = verify(token, JWT_SECRET_TOKEN) as IPayload;
+    const { sub: user_id, email, name, isAdmin } = verify(token, JWT_SECRET_TOKEN) as IPayload;
 
     request.user = {
       id: +user_id,
       email,
-      name
+      name,
+      isAdmin
     };
 
     next();

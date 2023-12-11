@@ -45,12 +45,8 @@ export class AssetRepository {
     });
   }
 
-  async deleteByIdAndUSerId(id: number, userId: number) {
-    const asset = await this.findByIdAndUserId(id, userId);
-
-    if (!asset) return;
-
-    await this.repository.softDelete(asset.id);
+  async deleteById(id: number): Promise<void> {
+    await this.repository.softDelete(id);
   }
 
   async update(id: number, data: UpdateAssetDto): Promise<void> {

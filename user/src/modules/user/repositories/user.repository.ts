@@ -24,4 +24,12 @@ export class UserRepository {
       }
     });
   }
+
+  async getById(id: number): Promise<UserEntity | null> {
+    return this.repository.findOne({
+      where: {
+        id
+      }
+    });
+  }
 }

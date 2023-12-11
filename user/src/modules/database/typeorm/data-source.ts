@@ -2,10 +2,10 @@ import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 
 import { AssetEntity1702306648758 } from './migrations/1702306648758-AssetEntity';
-import { DebitEntity1702306664168 } from './migrations/1702306664168-DebitEntity';
+import { DebtEntity1702306664168 } from './migrations/1702306664168-DebtEntity';
 import { UserEntity1702304979264 } from './migrations/1702304979264-UserEntity';
 import { AssetEntity } from '../../assets/entities/asset.entity';
-import { DebitEntity } from '../../debts/entities/debit.entity';
+import { DebtEntity } from '../../debts/entities/debt.entity';
 import { UserEntity } from '../../user/entities/user.entity';
 
 
@@ -20,7 +20,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_NAME,
   synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
   logging: Boolean(process.env.DATABASE_LOGGING),
-  entities: [UserEntity, AssetEntity, DebitEntity],
-  migrations: [UserEntity1702304979264, AssetEntity1702306648758, DebitEntity1702306664168],
+  entities: [UserEntity, AssetEntity, DebtEntity],
+  migrations: [UserEntity1702304979264, AssetEntity1702306648758, DebtEntity1702306664168],
   subscribers: [],
 });

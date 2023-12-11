@@ -1,8 +1,9 @@
-import { Column } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/base/base.entity';
 
-export class DebitEntity extends BaseEntity {
+@Entity('debts')
+export class DebtEntity extends BaseEntity {
   @Column({ name: 'user_id' })
   userId: number;
 

@@ -11,6 +11,7 @@ import { UserRepository } from './../../users/repositories/user.repository';
 import { DateFormat } from './../../../shared/utils/date-format.utils';
 import { SignInResponseDto } from '../dtos/sign-in-response.dto';
 import { AppError } from './../../../shared/errors/app.error';
+import { UserUtil } from '../../../shared/utils/user.util';
 import { IPayload } from '../interfaces/auth.interface';
 import { SignInDto } from '../dtos/sign-in.dto';
 
@@ -53,7 +54,15 @@ export class AuthenticationService {
 
       const user = await this.userRepository.findById(userId);
 
-      return this.signIn(user!);
+      if (!user) {
+        throw new AppError('Unauthorized', 401);
+      }
+
+      return this.signIn({
+        ...user,
+        isAdmin: UserUtil.isAdmin(user.role)
+      });
+
     } catch (err: any) {
 
       if (err instanceof AppError) throw err;
@@ -73,8 +82,8 @@ export class AuthenticationService {
     return { sub, email };
   }
 
-  private generateAccessToken({ id, name, email }: SignInDto): string {
-    return sign({ name, email }, JWT_SECRET_TOKEN, {
+  private generateAccessToken({ id, name, email, isAdmin }: SignInDto): string {
+    return sign({ name, email, isAdmin }, JWT_SECRET_TOKEN, {
       subject: `${id}`,
       expiresIn: JWT_EXPIRES_IN_TOKEN,
     });

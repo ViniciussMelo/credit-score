@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
+
 import { AssetService } from '../services/asset.service';
-import { UserRole } from 'modules/user/entities/user.entity';
 
 export class AssetController {
   private readonly assetService: AssetService;
