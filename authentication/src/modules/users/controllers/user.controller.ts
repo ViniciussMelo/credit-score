@@ -21,9 +21,7 @@ export class UserController {
   }
 
   async delete(request: Request, response: Response): Promise<Response> {
-    const { authorization } = request.headers;
-
-    await this.userService.delete(authorization!);
+    await this.userService.delete(parseInt((request.user.id)));
 
     return response.status(200).send();
   }

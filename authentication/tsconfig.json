@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
+    "outDir": "./dist",
     "target": "es2016",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -9,5 +11,6 @@
     "strict": true,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
+    "sourceMap": true
   }
 }

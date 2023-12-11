@@ -21,8 +21,4 @@ export class UserEntity extends BaseEntity {
 
   @Column()
   role: UserRole;
-
-  @OneToOne(() => UserTokenEntity, userToken => userToken.user)
-  @JoinColumn()
-  userToken: UserTokenEntity;
 }

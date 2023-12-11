@@ -6,23 +6,68 @@ import {
   JWT_SECRET_REFRESH_TOKEN,
   JWT_EXPIRES_IN_REFRESH_TOKEN
 } from '../../../configs/constants';
-import { SignInResponseDto } from '../dtos/signin-response.dto';
-import { SignInDto } from '../dtos/sigin.dto';
+import { UserTokenRepository } from './../../users/repositories/user-token.repository';
+import { UserRepository } from './../../users/repositories/user.repository';
+import { DateFormat } from './../../../shared/utils/date-format.utils';
+import { SignInResponseDto } from '../dtos/sign-in-response.dto';
+import { AppError } from './../../../shared/errors/app.error';
+import { IPayload } from '../interfaces/auth.interface';
+import { SignInDto } from '../dtos/sign-in.dto';
 
-interface IPayload {
-  sub: string;
-  email: string;
-}
 
 export class AuthenticationService {
-  signIn(data: SignInDto): SignInResponseDto {
-    return {
-      accessToken: this.generateAccessToken(data),
-      refreshToken: this.generateRefreshToken(data)
-    };
+  private readonly userTokenRepository: UserTokenRepository;
+  private readonly userRepository: UserRepository;
+
+  constructor() {
+    this.userTokenRepository = new UserTokenRepository();
+    this.userRepository = new UserRepository();
   }
 
-  check(token: string) {
+  async signIn(data: SignInDto): Promise<SignInResponseDto> {
+    const accessToken = this.generateAccessToken(data);
+    const refreshToken = this.generateRefreshToken(data);
+
+    await this.saveToken(data.id, refreshToken);
+
+    return {
+      accessToken,
+      refreshToken
+    }
+  }
+
+  async getNewToken(refreshToken: string): Promise<SignInResponseDto> {
+    try {
+      const { sub } = this.checkRefreshToken(refreshToken);
+      const userId = parseInt(sub);
+
+      const userToken = await this.userTokenRepository.getTokenByUserIdAndToken(userId, refreshToken);
+
+      if (!userToken) {
+        throw new AppError('Unauthorized', 401);
+      }
+
+      if (DateFormat.isExpired(userToken.expiresDate)) {
+        throw new AppError('Refresh token has expired', 403);
+      }
+
+      const user = await this.userRepository.findById(userId);
+
+      return this.signIn(user!);
+    } catch (err: any) {
+
+      if (err instanceof AppError) throw err;
+
+      throw new AppError('Unauthorized', 401);
+    }
+  }
+
+  private async saveToken(userId: number, refreshToken: string) {
+    await this.userTokenRepository.deleteByUserId(userId);
+    await this.userTokenRepository.save(userId, refreshToken);
+  }
+
+  private checkRefreshToken(token: string) {
     const { sub, email } = verify(token, JWT_SECRET_REFRESH_TOKEN) as IPayload;
 
     return { sub, email };

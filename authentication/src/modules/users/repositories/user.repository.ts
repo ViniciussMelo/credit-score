@@ -1,33 +1,25 @@
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 
+import { AppDataSource } from '../../database/typeorm/data-source';
 import { CreateUserDto } from '../dtos/create-user.dto';
-import { UserEntity } from '../entities/user.entity';
+import { UserEntity, UserRole } from '../entities/user.entity';
 
 export class UserRepository {
-  private readonly repository: Repository<UserEntity>;
+  private repository: Repository<UserEntity>;
 
   constructor() {
-    this.repository = getRepository(UserEntity);
+    this.repository = AppDataSource.getRepository(UserEntity);
   }
 
   async create(data: CreateUserDto): Promise<UserEntity> {
-    const user = this.repository.create(data);
+    const user = this.repository.create({ ...data, role: UserRole.customer });
 
     const response = await this.repository.save(user);
 
     return response;
   }
 
-  async findByEmailAndPassword(email: string, password: string) {
-    return this.repository.findOne({
-      where: {
-        email,
-        password,
-      }
-    });
-  }
-
-  async findByEmail(email: string): Promise<UserEntity | undefined> {
+  async findByEmail(email: string): Promise<UserEntity | null> {
     return this.repository.findOne({
       where: {
         email
@@ -35,7 +27,7 @@ export class UserRepository {
     });
   }
 
-  async findById(id: number): Promise<UserEntity | undefined> {
+  async findById(id: number): Promise<UserEntity | null> {
     return this.repository.findOne({
       where: {
         id

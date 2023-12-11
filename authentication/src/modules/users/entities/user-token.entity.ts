@@ -1,4 +1,4 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from './user.entity';
 
 @Entity('user_tokens')
@@ -6,7 +6,7 @@ export class UserTokenEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'user_id'})
+  @Column({ name: 'user_id' })
   userId: number;
 
   @Column({ name: 'refresh_token' })
@@ -15,6 +15,7 @@ export class UserTokenEntity {
   @Column({ name: 'expires_date' })
   expiresDate: Date;
 
-  @OneToOne(() => UserEntity, user => user.userToken)
+  @OneToOne(() => UserEntity)
+  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 }

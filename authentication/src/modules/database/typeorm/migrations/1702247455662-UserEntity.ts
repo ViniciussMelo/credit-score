@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { UserRole } from '../../../modules/users/entities/user.entity';
+import { UserRole } from '../../../users/entities/user.entity';
 
 export class UserEntity1702247455662 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -29,7 +29,7 @@ export class UserEntity1702247455662 implements MigrationInterface {
           {
             name: 'role',
             type: 'enum',
-            enum: Object.values(UserRole),
+            enum: Object.values(UserRole)
           },
           {
             name: 'created_at',

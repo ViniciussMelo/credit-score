@@ -29,11 +29,11 @@ export class UserService {
       email,
       name,
       password
-    })
+    });
   }
 
   async login({ email, password }: LoginDto): Promise<ILoginResponse> {
-    const foundUser = await this.userRepository.findByEmailAndPassword(email, password);
+    const foundUser = await this.userRepository.findByEmail(email);
 
     if (!foundUser) {
       throw new AppError('Unauthorized', 401);
@@ -41,7 +41,7 @@ export class UserService {
 
     const isSamePassword = await BcryptHash.verifyPassword(
       password,
-      password,
+      foundUser.password,
     );
 
     if (!isSamePassword) {
@@ -51,17 +51,13 @@ export class UserService {
     return this.authenticationService.signIn(foundUser);
   }
 
-  async delete(token: string): Promise<void> {
-    this.authenticationService.check(token);
-
-    const id = 1;
-
-    const foundUser = await this.userRepository.findById(id);
+  async delete(userId: number): Promise<void> {
+    const foundUser = await this.userRepository.findById(userId);
 
     if (!foundUser) {
       throw new AppError('Unauthorized', 401)
     }
 
-    await this.userRepository.deleteById(id);
+    await this.userRepository.deleteById(userId);
   }
 }
