@@ -3,6 +3,11 @@ import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../../shared/base/base.entity';
 import { UserTokenEntity } from './user-token.entity';
 
+export enum UserRole {
+  admin = 'admin',
+  customer = 'customer'
+}
+
 @Entity('users')
 export class UserEntity extends BaseEntity {
   @Column()
@@ -13,6 +18,9 @@ export class UserEntity extends BaseEntity {
 
   @Column()
   password: string;
+
+  @Column()
+  role: UserRole;
 
   @OneToOne(() => UserTokenEntity, userToken => userToken.user)
   @JoinColumn()
