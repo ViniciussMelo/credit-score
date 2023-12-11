@@ -16,7 +16,7 @@ export class UserService {
     this.userRepository = new UserRepository();
   }
 
-  async create({ email, name, password }: CreateUserDto): Promise<void> {
+  async create({ email, name, password, role }: CreateUserDto): Promise<void> {
     const alreadyExistsUser = await this.userRepository.findByEmail(email);
 
     if (alreadyExistsUser) {
@@ -28,7 +28,8 @@ export class UserService {
     await this.userRepository.create({
       email,
       name,
-      password
+      password,
+      role
     });
   }
 

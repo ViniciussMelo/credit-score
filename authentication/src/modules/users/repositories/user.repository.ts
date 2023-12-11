@@ -12,7 +12,7 @@ export class UserRepository {
   }
 
   async create(data: CreateUserDto): Promise<UserEntity> {
-    const user = this.repository.create({ ...data, role: UserRole.customer });
+    const user = this.repository.create(data);
 
     const response = await this.repository.save(user);
 

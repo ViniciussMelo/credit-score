@@ -1,0 +1,37 @@
+version: '3.3'
+
+services:
+  database:
+    image: postgres
+    container_name: user_database
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - "${DATABASE_PORT}:5432"
+    volumes:
+      - pgdata:/data/postgres
+
+  app:
+    build: .
+    container_name: user
+    restart: always
+    environment:
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      APP_PORT: ${APP_PORT}
+      DEBUG_PORT: ${DEBUG_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/usr/app
+    links:
+      - database
+    depends_on:
+      - database
+
+volumes:
+  pgdata:
+    driver: local
