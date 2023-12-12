@@ -39,3 +39,4 @@
 > - Isolate the database methods by creating providers, today it's done directly inside the repositories;
 > - Add a error-tracking platform to receive the application reports (like Sentry);
 > - Add a cache manager to set the credit score, because it will change only if some debt or asset change;
+> - Add swagger documentation
