@@ -29,7 +29,7 @@
 ## Installation
 > Clone this project in your computer with the command:
 > ```
-> 	git clone https://github.com/ViniciussMelo/serasa-challenge.git
+> 	git clone https://github.com/ViniciussMelo/credit-score.git
 > ```
 > The next steps to run the microservices are inside their respective folders.
 
