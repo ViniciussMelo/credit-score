@@ -13,8 +13,10 @@ services:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
     volumes:
       - pgdata:/data/postgres
+    networks:
+      - develop
 
-  app:
+  app1:
     build: .
     container_name: authentication
     restart: always
@@ -27,11 +29,17 @@ services:
       - "${DEBUG_PORT}:${DEBUG_PORT}"
     volumes:
       - .:/usr/app
-    links: 
+    links:
       - database
     depends_on:
       - database
+    networks:
+      - develop
 
 volumes:
   pgdata:
     driver: local
+
+networks:
+  develop:
+    external: true

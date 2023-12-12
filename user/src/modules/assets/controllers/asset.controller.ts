@@ -10,7 +10,7 @@ export class AssetController {
   }
 
   async create(request: Request, response: Response): Promise<Response> {
-    await this.assetService.create(request.user, request.body);
+    await this.assetService.create(request.user, request.body, request.headers.authorization || '');
 
     return response.status(201).send();
   }
@@ -18,7 +18,7 @@ export class AssetController {
   async update(request: Request, response: Response): Promise<Response> {
     const { id } = request.params
 
-    await this.assetService.update(+id, request.user.id, request.body);
+    await this.assetService.update(+id, request.user.id, request.body, request.headers.authorization || '');
 
     return response.status(200).send();
   }
@@ -40,7 +40,7 @@ export class AssetController {
   async delete(request: Request, response: Response): Promise<Response> {
     const { id } = request.params
 
-    await this.assetService.delete(+id, request.user.id);
+    await this.assetService.delete(+id, request.user.id, request.headers.authorization || '');
 
     return response.status(200).send();
   }

@@ -13,10 +13,12 @@ services:
       - '27017:27017'
     volumes:
       - 'mongo-db:/bitnami/mongodb'
+    networks:
+      - develop
 
-  app:
+  app3:
     build: .
-    container_name: user
+    container_name: score
     restart: always
     environment:
       APP_PORT: ${APP_PORT}
@@ -28,6 +30,13 @@ services:
       - mongodb
     depends_on:
       - mongodb
+    networks:
+      - develop
 
 volumes:
   mongo-db:
+
+
+networks:
+  develop:
+    external: true

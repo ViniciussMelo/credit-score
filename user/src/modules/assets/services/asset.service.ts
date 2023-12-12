@@ -4,19 +4,23 @@ import { UserService } from '../../user/services/user.service';
 import { AppError } from '../../../shared/errors/app.error';
 import { CreateAssetDto } from '../dtos/create-asset.dto';
 import { UpdateAssetDto } from '../dtos/update-asset.dto';
+import { ScoreService } from '../../score/score.service';
 import { AssetEntity } from '../entities/asset.entity';
 
 export class AssetService {
+  private readonly scoreService: ScoreService;
   private readonly userService: UserService;
 
   private readonly assetRepository: AssetRepository;
 
   constructor() {
     this.assetRepository = new AssetRepository();
+
+    this.scoreService = new ScoreService();
     this.userService = new UserService();
   }
 
-  async create({ email, id: userId, name }: UserPayloadDto, data: CreateAssetDto): Promise<void> {
+  async create({ email, id: userId, name }: UserPayloadDto, data: CreateAssetDto, token: string): Promise<void> {
     const alreadyExistsAsset = await this.assetRepository.findByTypeAndUserId(userId, data.type);
 
     if (alreadyExistsAsset) {
@@ -33,7 +37,9 @@ export class AssetService {
       email
     });
 
-    await this.assetRepository.create(userId, data);
+    const asset = await this.assetRepository.create(userId, data);
+
+    await this.scoreService.updateAsset(asset, token);
   }
 
   async getAll(userId: number): Promise<AssetEntity[]> {
@@ -50,17 +56,20 @@ export class AssetService {
     return asset;
   }
 
-  async update(id: number, userId: number, data: UpdateAssetDto): Promise<void> {
+  async update(id: number, userId: number, data: UpdateAssetDto, token: string): Promise<void> {
     const asset = await this.assetRepository.findByIdAndUserId(id, userId);
 
     if (!asset) {
       throw new AppError('Not found', 404);
     }
 
-    return this.assetRepository.update(id, data);
+    await this.assetRepository.update(id, data);
+    const updatedAsset = await this.assetRepository.findByIdAndUserId(id, userId);
+
+    await this.scoreService.updateAsset(updatedAsset!, token);
   }
 
-  async delete(id: number, userId: number): Promise<void> {
+  async delete(id: number, userId: number, token: string): Promise<void> {
     const asset = await this.assetRepository.findByIdAndUserId(id, userId);
 
     if (!asset) {
@@ -68,5 +77,6 @@ export class AssetService {
     }
 
     await this.assetRepository.deleteById(id);
+    await this.scoreService.deleteItem(id, userId, token);
   }
 }

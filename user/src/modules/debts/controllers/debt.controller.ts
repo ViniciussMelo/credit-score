@@ -10,7 +10,7 @@ export class DebtController {
   }
 
   async create(request: Request, response: Response): Promise<Response> {
-    await this.debtService.create(request.body);
+    await this.debtService.create(request.body, request.headers.authorization || '');
 
     return response.status(201).send();
   }
@@ -18,7 +18,7 @@ export class DebtController {
   async update(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
 
-    await this.debtService.update(+id, request.body);
+    await this.debtService.update(+id, request.body, request.headers.authorization || '');
 
     return response.status(200).send();
   }
@@ -34,7 +34,7 @@ export class DebtController {
   async deleteById(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
 
-    await this.debtService.deleteById(+id);
+    await this.debtService.deleteById(+id, request.headers.authorization || '');
 
     return response.status(200).send();
   }

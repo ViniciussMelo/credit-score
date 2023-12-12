@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -10,17 +11,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ItemType {
+  ASSET
+  DEBT
+}
+
 type Items {
   id       Int
   name     String
   price    Float
   quantity Int
+  type     ItemType
 }
 
 model Score {
-  id     String @id @map("_id")
+  id     String  @id @default(uuid()) @map("_id")
   userId Int
   email  String
   name   String
   score  Int
+  items  Items[]
 }
