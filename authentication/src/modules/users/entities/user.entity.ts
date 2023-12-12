@@ -1,7 +1,6 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/base/base.entity';
-import { UserTokenEntity } from './user-token.entity';
 
 export enum UserRole {
   admin = 'admin',

@@ -12,9 +12,9 @@ export class UserService {
 
   private readonly userRepository: UserRepository;
 
-  constructor() {
+  constructor(userRepository = new UserRepository()) {
     this.authenticationService = new AuthenticationService();
-    this.userRepository = new UserRepository();
+    this.userRepository = userRepository;
   }
 
   async create({ email, name, password, role }: CreateUserDto): Promise<void> {
@@ -57,7 +57,7 @@ export class UserService {
     const foundUser = await this.userRepository.findById(userId);
 
     if (!foundUser) {
-      throw new AppError('Unauthorized', 401)
+      throw new AppError('Unauthorized', 401);
     }
 
     await this.userRepository.deleteById(userId);
