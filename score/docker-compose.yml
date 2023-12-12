@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+  mongodb:
+    image: 'bitnami/mongodb:latest'
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=127.0.0.1
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_ROOT_USER=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGODB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGODB_REPLICA_SET_KEY=${MONGO_INITDB_DATABASE}
+    ports:
+      - '27017:27017'
+    volumes:
+      - 'mongo-db:/bitnami/mongodb'
+
+  app:
+    build: .
+    container_name: user
+    restart: always
+    environment:
+      APP_PORT: ${APP_PORT}
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/usr/app
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-db:
